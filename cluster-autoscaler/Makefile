@@ -26,7 +26,7 @@ build: clean deps
 	$(ENVVAR) GOOS=$(GOOS) go build -o cluster-autoscaler ${LDFLAGS_FLAG} ${TAGS_FLAG}
 
 build-binary: clean deps
-	$(ENVVAR) GOOS=$(GOOS) go build -v -o cluster-autoscaler ${LDFLAGS_FLAG} ${TAGS_FLAG}
+	$(ENVVAR) GOOS=$(GOOS) go build -o cluster-autoscaler ${LDFLAGS_FLAG} ${TAGS_FLAG}
 
 test-unit: clean deps build
 	$(ENVVAR) go test --test.short -race ./... $(FLAGS) ${TAGS_FLAG}
