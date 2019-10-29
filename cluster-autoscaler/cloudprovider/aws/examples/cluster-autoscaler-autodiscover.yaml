@@ -132,7 +132,7 @@ spec:
     spec:
       serviceAccountName: cluster-autoscaler
       containers:
-        - image: k8s.gcr.io/cluster-autoscaler:v1.12.3
+        - image: 192.168.118.72:5000/kubetest/cluster-autoscaler:latest #bitnami/cluster-autoscaler:latest #k8s.gcr.io/cluster-autoscaler:v1.15.2 #192.168.118.72:5000/kubetest/cluster-autoscaler:latest
           name: cluster-autoscaler
           resources:
             limits:
@@ -143,12 +143,13 @@ spec:
               memory: 300Mi
           command:
             - ./cluster-autoscaler
-            - --v=4
+            - --v=10
             - --stderrthreshold=info
             - --cloud-provider=aws
             - --skip-nodes-with-local-storage=false
             - --expander=least-waste
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/<YOUR CLUSTER NAME>
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/janitha-k8s
+            - --leader-elect=false
           volumeMounts:
             - name: ssl-certs
               mountPath: /etc/ssl/certs/ca-certificates.crt
@@ -157,4 +158,4 @@ spec:
       volumes:
         - name: ssl-certs
           hostPath:
-            path: "/etc/ssl/certs/ca-bundle.crt"
+            path: "/etc/ssl/certs/ca-certificates.crt"

@@ -26,7 +26,7 @@ build: clean deps
 	$(ENVVAR) GOOS=$(GOOS) go build -o cluster-autoscaler ${LDFLAGS_FLAG} ${TAGS_FLAG}
 
 build-binary: clean deps
-	$(ENVVAR) GOOS=$(GOOS) go build -o cluster-autoscaler ${LDFLAGS_FLAG} ${TAGS_FLAG}
+	$(ENVVAR) GOOS=$(GOOS) go build -v -o cluster-autoscaler ${LDFLAGS_FLAG} ${TAGS_FLAG}
 
 test-unit: clean deps build
 	$(ENVVAR) go test --test.short -race ./... $(FLAGS) ${TAGS_FLAG}
@@ -72,5 +72,11 @@ container: build-in-docker make-image
 test-in-docker: clean docker-builder
 	docker run -v `pwd`:/gopath/src/k8s.io/autoscaler/cluster-autoscaler/ autoscaling-builder:latest bash -c 'cd /gopath/src/k8s.io/autoscaler/cluster-autoscaler && go test -race ./... ${TAGS_FLAG}'
 
-.PHONY: all deps build test-unit clean format execute-release dev-release docker-builder build-in-docker release generate
+# kubectl -n kube-system --kubeconfig=/home/janitha/Documents/bb/DVOP/aws-k8s-terraform/config delete -f /home/janitha/go/src/autoscaler/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+janitha: build-in-docker make-image
+	docker tag staging-k8s.gcr.io/cluster-autoscaler:dev lwpeartifabld.tideworks.com:5000/kubetest/cluster-autoscaler:latest
+	docker push lwpeartifabld.tideworks.com:5000/kubetest/cluster-autoscaler:latest
+	kubectl -n kube-system --kubeconfig=/home/janitha/Documents/bb/DVOP/aws-k8s-terraform/config apply -f /home/janitha/go/src/autoscaler/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+
+.PHONY: all deps build test-unit clean format execute-release dev-release docker-builder build-in-docker release generate janitha
 

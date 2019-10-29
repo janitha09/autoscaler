@@ -199,6 +199,7 @@ func (le *LeaderElector) Run(ctx context.Context) {
 		le.config.Callbacks.OnStoppedLeading()
 	}()
 	if !le.acquire(ctx) {
+
 		return // ctx signalled done
 	}
 	ctx, cancel := context.WithCancel(ctx)
@@ -238,7 +239,7 @@ func (le *LeaderElector) acquire(ctx context.Context) bool {
 	defer cancel()
 	succeeded := false
 	desc := le.config.Lock.Describe()
-	klog.Infof("attempting to acquire leader lease  %v...", desc)
+	klog.Infof("Janitha attempting to acquire leader lease  %v...", desc)
 	wait.JitterUntil(func() {
 		succeeded = le.tryAcquireOrRenew()
 		le.maybeReportTransition()
@@ -279,7 +280,7 @@ func (le *LeaderElector) renew(ctx context.Context) {
 		le.maybeReportTransition()
 		desc := le.config.Lock.Describe()
 		if err == nil {
-			klog.V(5).Infof("successfully renewed lease %v", desc)
+			// klog.V(5).Infof("successfully renewed lease %v", desc)
 			return
 		}
 		le.config.Lock.RecordEvent("stopped leading")
