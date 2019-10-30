@@ -77,6 +77,8 @@ janitha: build-in-docker make-image
 	docker tag staging-k8s.gcr.io/cluster-autoscaler:dev lwpeartifabld.tideworks.com:5000/kubetest/cluster-autoscaler:latest
 	docker push lwpeartifabld.tideworks.com:5000/kubetest/cluster-autoscaler:latest
 	kubectl -n kube-system --kubeconfig=/home/janitha/Documents/bb/DVOP/aws-k8s-terraform/config apply -f /home/janitha/go/src/autoscaler/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+	./cluster-autoscaler --kubeconfig /var/run/kubernetes/admin.kubeconfig --cloud-provider=aws --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/janitha-k8s --v=10
 
+# https://aws.amazon.com/premiumsupport/knowledge-center/eks-cluster-autoscaler-setup/
 .PHONY: all deps build test-unit clean format execute-release dev-release docker-builder build-in-docker release generate janitha
 
